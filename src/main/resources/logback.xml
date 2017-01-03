@@ -1,0 +1,33 @@
+<!--  System.logを出す。このxmlは配置するだけで、他の設定は不要 -->
+
+<configuration>
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+                <target>System.out</target>
+                <encoder>
+                        <pattern>%d{yyyy/MM/dd HH:mm:ss} %-5level %msg%n</pattern>
+                </encoder>
+        </appender>
+        <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+                <file>C:\Users\ryusui_kuzuo\Desktop\spring-boot-sample-logger-example.txt</file>　<!-- 任意のパスに。-->
+                <encoder>
+                        <charset>UTF-8</charset>
+                        <pattern>%d{yyyy/MM/dd HH:mm:ss} %-5level %msg%n</pattern>
+                </encoder>
+        </appender>
+ <!-- tomcatやsystemログなどrootで一通り全部ここで管理。rootのfileで出力先指定。 -->
+        <root>
+                <level value="INFO" /> <!-- trace debug info warn error。深いと起動速度結構下がる -->
+                <appender-ref ref="STDOUT" />　<!--  コンソール出力。必要に応じてコメントアウトで出さないことも可能-->
+                <appender-ref ref="FILE" />
+        </root>
+</configuration>
+
+<!-- 下記みたいな書き方で個別しても可能
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="com.amazonaws" level="INFO"/>
+    <logger name="org.hibernate" level="ERROR"/>
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.thymeleaf" level="INFO"/>
+</configuration>
+ -->

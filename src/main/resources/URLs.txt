@@ -1,0 +1,53 @@
+	@RequestMapping("/rest")
+	public List<MyDataEntity> restAll() {
+		return service.getAll();
+	}
+
+	@RequestMapping("/rest/{num}")
+	public MyDataEntity restBy(@PathVariable int num) {
+		return service.getId(num);
+	}
+
+	@RequestMapping("/count")
+	public int count() {
+		return bean.count();
+
+	@RequestMapping(value = "/msg", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/msg", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/edit", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/find", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/find", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/Ajax", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/Ajax", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/IPAddress", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/nosecurity", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/BootStrapOriginal", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/admin/index", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/admin/index", method = RequestMethod.POST)
+
+}
