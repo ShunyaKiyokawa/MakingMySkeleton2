@@ -1,3 +1,5 @@
+HTML側にvar num = /*[[${param.id[0]}]]*/;みたいなことがかかれていたら、/BootStrap/?id=1などとアクセスしなければならない。
+
 	@RequestMapping("/rest")
 	public List<MyDataEntity> restAll() {
 		return service.getAll();

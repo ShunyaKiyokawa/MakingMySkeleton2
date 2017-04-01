@@ -19,6 +19,8 @@
 <body>
 	<h1 th:text="#{content.title}">Helo page</h1>
 	<p th:text="${msg}"></p>
+	<p th:text="${radioItems}"></p>
+	<p th:text="${datalist}"></p>
 	 <form th:action="@{/logout}" method="post">
 	    <input type="submit" value="Sign Out"/>
 	</form>
@@ -43,6 +45,14 @@
 			<div th:if="${#fields.hasErrors('password')}"
 				th:errors="*{password}" th:errorclass="err">
 				</div></td></tr>
+		<tr><td><label for="gender">性別</label></td>
+			<td>
+			<div th:each="item : ${radioItems}">
+				<input type="radio" name="gender" th:value="${item.value}" 
+					th:errors="*{gender}" th:text="test" th:field="*{gender}"  th:errorclass="err" >radio</input>
+				<div th:if="${#fields.hasErrors('gender')}"
+					th:errors="*{gender}" th:errorclass="err"></div>
+			</div></td></tr>
 		<tr><td><label for="age">年齢</label></td>
 			<td><input type="text" name="age"
 				th:value="*{age}" th:errorclass="err" />
@@ -65,11 +75,12 @@
 	</table>
 	<hr/>
 	<table>
-	<tr><th>ID</th><th>名前</th><th>年齢</th><th>メール</th><th>メモ（電話番号）</th><th>ロール</th></tr>
+	<tr><th>ID</th><th>名前</th><th>年齢</th><th>性別</th><th>メール</th><th>メモ（電話番号）</th><th>ロール</th></tr>
 	<tr th:each="obj : ${datalist}">
 		<td th:text="${obj.id}"></td>
 		<td th:text="${obj.username}"></td>
 		<td th:text="${obj.age}"></td>
+		<td th:text="${obj.gender}"></td>
 		<td th:text="${obj.mail}"></td>
 		<td th:text="${obj.memo}"></td>
 		<td th:text="${obj.role}"></td>

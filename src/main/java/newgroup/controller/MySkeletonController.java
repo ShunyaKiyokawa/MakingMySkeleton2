@@ -2,7 +2,10 @@
 
 package newgroup.controller;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -55,6 +58,7 @@ public class MySkeletonController {
 		mav.addObject("role_admin","ROLE_ADMIN"); //管理者権限のロールを指定する
 		mav.addObject("role_user","ROLE_USER"); //一般ユーザーロールを指定する。このページで作成するのは一般ユーザー
 		mav.addObject("formModel",mydata);
+		mav.addObject("radioItems", RADIO_ITEMS);
 		List<MyDataEntity> list = service.getAll();
 		//Iterable<MyDataEntity> list = repository.findAll();
 		//Iterable<MyDataEntity> list = dao.getAll();
@@ -67,6 +71,19 @@ public class MySkeletonController {
 		return mav;
 	}
 
+	/**
+	* radio buttonの表示に使用するアイテム群の準備
+	*/
+	final static Map<String, String> RADIO_ITEMS =
+		Collections.unmodifiableMap(new LinkedHashMap<String, String>() {
+		{
+			put("radio_男", "男");
+			put("radio_女", "女");
+			put("radio_その他", "その他");
+			//put("radio_バリデエラー", "D");
+		}
+	});
+	
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	@Transactional(readOnly=false)
 	public ModelAndView form(
@@ -87,7 +104,7 @@ public class MySkeletonController {
 		}
 		mov.addObject("role_admin","ROLE_ADMIN"); //管理者権限のロールを指定する
 		mov.addObject("role_user","ROLE_USER"); //一般ユーザーロールを指定する。このページで作成するのは一般ユーザー
-
+		mov.addObject("radioItems", RADIO_ITEMS);
 /*       // パスワードを暗号化する
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String passwordHash = encoder.encode(password.getPasswordHash());

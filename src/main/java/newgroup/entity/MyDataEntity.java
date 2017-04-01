@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Fetch;
@@ -55,7 +56,7 @@ import newgroup.phoneVaridation.Phone;
 //@XmlRootElement
 @Data
 @Entity
-@Table(name = "mydata")
+@Table(name = "mydata") //mysql等のDBのテーブル名がこれになる（勝手に作られる）
 public class MyDataEntity  implements UserDetails{
 	//public enum Authority {ROLE_USER, ROLE_ADMIN};
 
@@ -88,7 +89,7 @@ public class MyDataEntity  implements UserDetails{
 	    // //文字コード指定。データベースはshiftjisで受け取っているが。。。
 	}*/
 
-	@Id
+	@Id //プライマリキー
 	@GeneratedValue(strategy = GenerationType.AUTO) //値は自動生成
 	@Column
 	@NotNull
@@ -99,11 +100,15 @@ public class MyDataEntity  implements UserDetails{
 	@NotEmpty
 	private String username; //ちなみにUserDetailsがusernameを要求するので、この値は変えられない
 
-	@JsonIgnore
+	@JsonIgnore //passwordみたいな出したくないのにつけろ
 	@Column(nullable = false)
 	@Size(min=5, max=16) //文字数5文字以上最大16文字
 	private String password;
 
+	@Column //必ずgetterとsetterを下部に書くこと
+	@Pattern(regexp = "男|女|その他")
+	private String gender; 
+	
 	@Column(length = 200, nullable = true)
 	@Email
 	private String mail;
@@ -134,6 +139,14 @@ public class MyDataEntity  implements UserDetails{
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 
 	public String getMail() {
@@ -193,6 +206,12 @@ public class MyDataEntity  implements UserDetails{
 		// TODO 自動生成されたメソッド・スタブ
 		//defaultがfalseだがユーザーがロックされているエラーが出たのでひとまずtrueにする
 		return true;
+	}
+
+	@Override
+	public String getPassword() {
+		// TODO 自動生成されたメソッド・スタブ
+		return null;
 	}
 
 }
