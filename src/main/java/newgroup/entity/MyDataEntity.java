@@ -20,7 +20,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Fetch;
@@ -38,33 +37,24 @@ import newgroup.phoneVaridation.Phone;
 
 //JPAの管理化にエンティティクラスとしておかれる
 
-@NamedQueries ({
-		@NamedQuery(
-			name="findWithName",
-			query="from MyDataEntity where username like :fusername"),
-		@NamedQuery(
-			name="findByAge",
-			query="from MyDataEntity where age > :min and age < :max"),
-		@NamedQuery(
-			name="getAll",
-			query="from MyDataEntity"),
-})
+@NamedQueries({ @NamedQuery(name = "findWithName", query = "from MyDataEntity where username like :fusername"),
+		@NamedQuery(name = "findByAge", query = "from MyDataEntity where age > :min and age < :max"),
+		@NamedQuery(name = "getAll", query = "from MyDataEntity"), })
 
-//XmlRootElementはXMLで返すためにつけている。ただ、機能していない。原因不明。似た機能があると動かないらしい。
-//jackson.dataformatをpomから消すと表示変わるからここが原因？
-//公式ではJAXB（JDK）を使うことを推奨しているがプラグイン必要かも
-//@XmlRootElement
+// XmlRootElementはXMLで返すためにつけている。ただ、機能していない。原因不明。似た機能があると動かないらしい。
+// jackson.dataformatをpomから消すと表示変わるからここが原因？
+// 公式ではJAXB（JDK）を使うことを推奨しているがプラグイン必要かも
+// @XmlRootElement
 @Data
 @Entity
-@Table(name = "mydata") //mysql等のDBのテーブル名がこれになる（勝手に作られる）
-public class MyDataEntity  implements UserDetails{
-	//public enum Authority {ROLE_USER, ROLE_ADMIN};
+@Table(name = "mydata") // mysql等のDBのテーブル名がこれになる（勝手に作られる）
+public class MyDataEntity implements UserDetails {
+	// public enum Authority {ROLE_USER, ROLE_ADMIN};
 
+	// MsgDataEntityとの紐づけ。MyDataEntity（ユーザー）ごとにメッセージは複数。
+	// @OneToMany(cascade=CascadeType.ALL)roleがない、みたいなエラーが出たのでonetomanyとfetchを追加
 
-	//MsgDataEntityとの紐づけ。MyDataEntity（ユーザー）ごとにメッセージは複数。
-	//@OneToMany(cascade=CascadeType.ALL)roleがない、みたいなエラーが出たのでonetomanyとfetchを追加
-
-	//MsgDataとのリレーションDBにするときは下記コメントアウトをはずす。
+	// MsgDataとのリレーションDBにするときは下記コメントアウトをはずす。
 	@OneToMany(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
 
@@ -79,47 +69,44 @@ public class MyDataEntity  implements UserDetails{
 		this.msgdatas = msgdatas;
 	}
 
+	/*
+	 * @Bean public Filter characterEncodingFilter() { CharacterEncodingFilter
+	 * filter = new CharacterEncodingFilter(); filter.setEncoding("UTF-8");
+	 * filter.setForceEncoding(true); return filter; //
+	 * //文字コード指定。データベースはshiftjisで受け取っているが。。。 }
+	 */
 
-	/*	@Bean
-	public Filter characterEncodingFilter() {
-	    CharacterEncodingFilter filter = new CharacterEncodingFilter();
-	    filter.setEncoding("UTF-8");
-	    filter.setForceEncoding(true);
-	    return filter;
-	    // //文字コード指定。データベースはshiftjisで受け取っているが。。。
-	}*/
-
-	@Id //プライマリキー
-	@GeneratedValue(strategy = GenerationType.AUTO) //値は自動生成
-	@Column
+	@Id // プライマリキー
+	@GeneratedValue(strategy = GenerationType.AUTO) // 値は自動生成
+	@Column // フィールドになる箇所はすべて必ずgetterとsetterを下部に書くこと
 	@NotNull
-	//この辺でバリデーション。引っかかったらtemplatesの下のValidationMessages.propertiesが呼ばれる
+	// この辺でバリデーション。引っかかったらtemplatesの下のValidationMessages.propertiesが呼ばれる
 	private long id;
 
 	@Column(length = 50, nullable = false)
 	@NotEmpty
-	private String username; //ちなみにUserDetailsがusernameを要求するので、この値は変えられない
+	private String username; // ちなみにUserDetailsがusernameを要求するので、この値は変えられない
 
-	@JsonIgnore //passwordみたいな出したくないのにつけろ
+	@JsonIgnore // passwordみたいな出したくないのにつけろ
 	@Column(nullable = false)
-	@Size(min=5, max=16) //文字数5文字以上最大16文字
+	@Size(min = 5, max = 16) // 文字数5文字以上最大16文字
 	private String password;
 
-	@Column //必ずgetterとsetterを下部に書くこと
-	@Pattern(regexp = "男|女|その他")
-	private String gender; 
-	
+	// @Column(nullable = true)
+	// // @Pattern(regexp = "男|女|その他")
+	// private String gender;
+
 	@Column(length = 200, nullable = true)
 	@Email
 	private String mail;
 
 	@Column(nullable = true)
-	@Min(value=0)
-	@Max(value=200)
+	@Min(value = 0)
+	@Max(value = 200)
 	private Integer age;
 
 	@Column(nullable = true)
-	@Phone(onlyNumber=true)
+	@Phone(onlyNumber = true)
 	private String memo;
 
 	@Column(nullable = false)
@@ -129,6 +116,7 @@ public class MyDataEntity  implements UserDetails{
 	public long getId() {
 		return id;
 	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
@@ -140,18 +128,19 @@ public class MyDataEntity  implements UserDetails{
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	
-	public String getGender() {
-		return gender;
-	}
 
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
+	// public String getGender() {
+	// return gender;
+	// }
+	//
+	// public void setGender(String gender) {
+	// this.gender = gender;
+	// }
 
 	public String getMail() {
 		return mail;
 	}
+
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
@@ -159,6 +148,7 @@ public class MyDataEntity  implements UserDetails{
 	public Integer getAge() {
 		return age;
 	}
+
 	public void setAge(Integer age) {
 		this.age = age;
 	}
@@ -166,6 +156,7 @@ public class MyDataEntity  implements UserDetails{
 	public String getMemo() {
 		return memo;
 	}
+
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
@@ -173,45 +164,52 @@ public class MyDataEntity  implements UserDetails{
 	public String getRole() {
 		return role;
 	}
+
 	public void setRole(String role) {
 		this.role = role;
 	}
 
 	@Override
-	  public Collection<? extends GrantedAuthority> getAuthorities() {
+	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority(role.toString()));
 		return authorities;
 	}
+
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO 自動生成されたメソッド・スタブ
-		//defaultがfalseだがユーザーがロックされているエラーが出たのでひとまずtrueにする
-		return true;
-	}
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO 自動生成されたメソッド・スタブ
-		//defaultがfalseだがユーザーがロックされているエラーが出たのでひとまずtrueにする
-		return true;
-	}
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO 自動生成されたメソッド・スタブ
-		//defaultがfalseだがユーザーがロックされているエラーが出たのでひとまずtrueにする
-		return true;
-	}
-	@Override
-	public boolean isEnabled() {
-		// TODO 自動生成されたメソッド・スタブ
-		//defaultがfalseだがユーザーがロックされているエラーが出たのでひとまずtrueにする
+		// defaultがfalseだがユーザーがロックされているエラーが出たのでひとまずtrueにする
 		return true;
 	}
 
 	@Override
-	public String getPassword() {
+	public boolean isAccountNonLocked() {
 		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		// defaultがfalseだがユーザーがロックされているエラーが出たのでひとまずtrueにする
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO 自動生成されたメソッド・スタブ
+		// defaultがfalseだがユーザーがロックされているエラーが出たのでひとまずtrueにする
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		// TODO 自動生成されたメソッド・スタブ
+		// defaultがfalseだがユーザーがロックされているエラーが出たのでひとまずtrueにする
+		return true;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }
