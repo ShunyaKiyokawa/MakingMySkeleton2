@@ -8,11 +8,13 @@ package newgroup.security;
 // ここで認証認可の設定をする
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,13 +25,7 @@ import newgroup.services.UserAuthService;
 @EnableWebSecurity
 // @Order(1)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	/*
-	 * @Autowired
-	 *
-	 * @Getter
-	 *
-	 * @Setter private DataSource dataSource;
-	 */
+
 	@Autowired
 	@Getter
 	@Setter
@@ -65,7 +61,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// configureGlobalにしたら、Bad Credentialsエラーが発生したのでGlobalを外す
 		// Service認証
 		auth.inMemoryAuthentication().withUser("admin").password("password").roles("ADMIN");
-		auth.userDetailsService(userAuthService); // サービス認証
+		auth.userDetailsService(userAuthService)
+			.passwordEncoder(passwordEncoder()); // サービス認証
 		// DBからっぽの時を考えてインメモリでadmin認証を1つ用意。
 		/*
 		 * JDBC認証。ハッシュ化が難しい。 auth .jdbcAuthentication() .dataSource(dataSource)
@@ -88,6 +85,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		 * //.withUser("admin").password("password").roles("ADMIN",
 		 * "CREATEUSER); //複数できそう？ //scope globalでmemory保存
 		 */
+		
+		
 	}
-
+	@Bean
+	BCryptPasswordEncoder passwordEncoder(){
+		return new BCryptPasswordEncoder();
+	}
 }

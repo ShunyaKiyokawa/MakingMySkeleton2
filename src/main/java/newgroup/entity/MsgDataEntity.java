@@ -42,7 +42,7 @@ public class MsgDataEntity {
 
 	public MsgDataEntity() {
 		super();
-		mydata = new MyDataEntity();
+		mydata = new MyDataEntity(mydata);
 	}
 
 	public long getId() {

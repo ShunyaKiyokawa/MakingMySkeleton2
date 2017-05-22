@@ -31,6 +31,6 @@ public class UserAuthService implements UserDetailsService{
 	      throw new UsernameNotFoundException("ユーザー名が登録されていません" + username);
 	    }
 
-	    return usernameInfo;
+	    return new MyDataEntity(usernameInfo);
 	  }
 }

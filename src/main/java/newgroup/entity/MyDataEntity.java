@@ -51,6 +51,19 @@ import newgroup.phoneVaridation.Phone;
 public class MyDataEntity implements UserDetails {
 	// public enum Authority {ROLE_USER, ROLE_ADMIN};
 
+	//UserAuthServiceが飛んでくる形式を受け取る
+	//コンストラクタエラーが出た場合、だいたいここでfinal使ってるから起こる
+	private MyDataEntity myDataEntity;
+	public MyDataEntity(MyDataEntity myDataEntity){
+		this.myDataEntity = myDataEntity;
+	}
+
+	//コンストラクタを定義。これがないと上記のコンストラクタと混同されてエラーが出る
+	//Error:......NoSuchMethodException: newgroup.entity.MyDataEntity.<init>()
+	MyDataEntity(){
+		
+	}
+	
 	// MsgDataEntityとの紐づけ。MyDataEntity（ユーザー）ごとにメッセージは複数。
 	// @OneToMany(cascade=CascadeType.ALL)roleがない、みたいなエラーが出たのでonetomanyとfetchを追加
 
@@ -59,8 +72,8 @@ public class MyDataEntity implements UserDetails {
 	@Fetch(FetchMode.SUBSELECT)
 
 	@Column(nullable = true)
-	private List<MsgDataEntity> msgdatas;
-
+	private List<MsgDataEntity> msgdatas;	
+	
 	public List<MsgDataEntity> getMsgdatas() {
 		return msgdatas;
 	}
@@ -69,6 +82,9 @@ public class MyDataEntity implements UserDetails {
 		this.msgdatas = msgdatas;
 	}
 
+	
+
+	
 	/*
 	 * @Bean public Filter characterEncodingFilter() { CharacterEncodingFilter
 	 * filter = new CharacterEncodingFilter(); filter.setEncoding("UTF-8");
